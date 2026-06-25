@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PLEKYYY WAWW! - Spesialis Mie Jebew Membara</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #0f0c0c;
+            --card-dark: #1a1515;
+            --primary-red: #d32f2f;
+            --hot-orange: #ff5722;
+            --text-light: #f5f5f5;
+            --text-muted: #aaaaaa;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+        body { background-color: var(--bg-dark); color: var(--text-light); }
+        
+        nav { display: flex; justify-content: space-between; align-items: center; padding: 20px 8%; background-color: rgba(26, 21, 21, 0.95); border-bottom: 2px solid var(--primary-red); position: sticky; top: 0; z-index: 1000; }
+        
+        /* BRAND LOGO MEMBARA */
+        .logo { font-size: 26px; font-weight: 900; color: white; letter-spacing: 1px; text-transform: uppercase; }
+        /* Efek Khusus untuk kata WAWW! */
+.waww-membara {
+    background: linear-gradient(45deg, #ff1100, #ff5722, #ffeb3b);
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+    display: inline-block;
+    position: relative;
+    font-style: italic;
+    text-shadow: 0 0 10px rgba(255, 87, 34, 0.3);
+    animation: apiMembara 1.5s ease-in-out infinite alternate;
+}
+        @keyframes apiMembara {
+            0% { transform: scale(1) rotate(-1deg); filter: drop-shadow(0 0 2px #d32f2f); }
+            100% { transform: scale(1.08) rotate(2deg); filter: drop-shadow(0 0 8px #ff5722) drop-shadow(0 0 15px #ffeb3b); }
+        }
+
+        .nav-links { list-style: none; display: flex; gap: 25px; }
+        .nav-links a { color: var(--text-muted); text-decoration: none; font-weight: 600; }
+        .nav-links a.active { color: var(--hot-orange); }
+
+        /* HERO SECTION */
+        .hero { display: flex; align-items: center; justify-content: space-between; padding: 60px 8%; gap: 40px; min-height: 70vh; }
+        .hero-content { flex: 1; }
+        .hero-content h1 { font-size: 48px; font-weight: 800; text-transform: uppercase; line-height: 1.2; margin-bottom: 20px; }
+        .hero-content h1 span { background-image: linear-gradient(45deg, var(--primary-red), var(--hot-orange)); background-clip: text; color: transparent; }
+        .hero-content p { color: var(--text-muted); font-size: 16px; margin-bottom: 30px; line-height: 1.6; }
+        .btn-order { display: inline-flex; align-items: center; gap: 10px; background: linear-gradient(45deg, var(--primary-red), var(--hot-orange)); color: white; text-decoration: none; padding: 15px 35px; border-radius: 30px; font-weight: 700; font-size: 16px; box-shadow: 0 5px 15px rgba(211, 47, 47, 0.4); transition: 0.3s; }
+        .btn-order:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(211, 47, 47, 0.6); }
+        .hero-image { flex: 1; text-align: right; }
+        .hero-image img { width: 85%; max-width: 450px; filter: drop-shadow(0 0 20px rgba(211, 47, 47, 0.3)); animation: float 3s ease-in-out infinite; border-radius: 15px; }
+
+        /* SECTION PROMOSI PAKET HEMAT */
+        .promo-section { padding: 60px 8%; background-color: #140e0e; border-top: 1px solid #221a1a; text-align: center; }
+        .promo-title { font-size: 32px; font-weight: 800; text-transform: uppercase; margin-bottom: 10px; }
+        .promo-title span { color: var(--hot-orange); }
+        .promo-subtitle { color: var(--text-muted); margin-bottom: 40px; font-size: 14px; }
+        
+        .promo-box { max-width: 750px; margin: 0 auto; background-color: var(--card-dark); border: 2px dashed var(--primary-red); border-radius: 20px; padding: 30px; display: flex; align-items: center; gap: 30px; text-align: left; box-shadow: 0 0 20px rgba(211,47,47,0.1); }
+        .promo-img { width: 180px; height: 180px; background-color: #110d0d; border-radius: 12px; overflow: hidden; flex-shrink: 0; padding: 5px; }
+        .promo-img img { width: 100%; height: 100%; object-fit: contain; }
+        .promo-info { flex-grow: 1; }
+        .promo-badge { display: inline-block; background-color: var(--primary-red); color: white; padding: 4px 12px; font-size: 11px; font-weight: 700; border-radius: 20px; text-transform: uppercase; margin-bottom: 10px; letter-spacing: 1px; }
+        .promo-info h3 { font-size: 22px; margin-bottom: 10px; color: white; }
+        .promo-info p { color: var(--text-muted); font-size: 13px; line-height: 1.5; margin-bottom: 20px; }
+        .btn-promo-go { display: inline-flex; align-items: center; gap: 8px; color: var(--hot-orange); text-decoration: none; font-weight: 700; font-size: 14px; border: 1px solid var(--hot-orange); padding: 8px 16px; border-radius: 6px; transition: 0.3s; }
+        .btn-promo-go:hover { background-color: var(--hot-orange); color: white; }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+
+        @media (max-width: 768px) {
+            .hero { flex-direction: column-reverse; text-align: center; padding: 40px 8%; }
+            .hero-image { text-align: center; }
+            .hero-content h1 { font-size: 34px; }
+            .promo-box { flex-direction: column; text-align: center; }
+            .promo-img { width: 150px; height: 150px; }
+        }
+
+        footer { background-color: #080606; text-align: center; padding: 20px; color: var(--text-muted); border-top: 1px solid #221a1a; margin-top: 40px; }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="logo">PLEKYYY <span class="waww-membara">WAWW!</span></div>
+        <ul class="nav-links">
+            <li><a href="/" class="active">Beranda</a></li>
+            <li><a href="/menu">Menu</a></li>
+        </ul>
+    </nav>
+
+    <div class="hero">
+        <div class="hero-content">
+            <h1>Surganya Pecinta <br><span>Makanan Pedas</span></h1>
+            <p>Rasakan sensasi ledakan bumbu minyak cabai rahasia melimpah di brand PLEKYYY WAWW!. Racik sendiri level pedas membara dan aneka toping premium sesukamu!</p>
+            <a href="/menu" class="btn-order"><i class="fas fa-utensils"></i> Mulai Pesan Sekarang</a>
+        </div>
+        <div class="hero-image">
+            <img src="https://images.unsplash.com/photo-1585032226651-759b368d7246?auto=format&fit=crop&q=80&w=400" alt="Mie Jebew">
+        </div>
+    </div>
+
+    <div class="promo-section">
+        <div class="promo-title">Promo <span>Spesial Hemat</span></div>
+        <p class="promo-subtitle">Solusi anti kehausan, makan kenyang nikmat ramah kantong!</p>
+        
+        <div class="promo-box">
+            <div class="promo-img">
+                <img src="/images/pakethemat.png" alt="Foto Paket Hemat">
+            </div>
+            <div class="promo-info">
+                <span class="promo-badge"><i class="fas fa-percentage"></i> PALING REKOMENDASI</span>
+                <h3>Paket Hemat Super (Mulai Rp 7.000)</h3>
+                <p>Makan pedas wajib ada penawarnya! Dapatkan 1 porsi makanan lezat ditambah varian es minuman segar dingin pilihan. Tersedia Paket 7.000 (Mie biasa + Minum) dan Paket 10.000 (Mie Toping  + Minum).</p>
+                <a href="/menu" class="btn-promo-go">
+                    <i class="fas fa-arrow-right"></i> Ambil Paket Hemat & Atur Level di Sini!
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <footer><p>&copy; 2026 PLEKYYY WAWW! Group - Jagonya Jebew Membara.</p></footer>
+
+    <!-- TOMBOL RAHASIA LOGIN ADMIN (POJOK KANAN BAWAH) -->
+    <a href="/login" id="btnRahasiaAdmin" style="position: fixed; bottom: 20px; right: 20px; width: 35px; height: 35px; background-color: #1a1515; border: 1px solid #221a1a; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #332222; text-decoration: none; transition: 0.3s; z-index: 9999;" title="Admin Area">
+        <i class="fas fa-lock" style="font-size: 12px;"></i>
+    </a>
+    <style>
+        #btnRahasiaAdmin:hover {
+            color: #ff5722 !important;
+            border-color: #ff5722 !important;
+            background-color: #0f0c0c !important;
+            box-shadow: 0 0 10px rgba(255, 87, 34, 0.3);
+        }
+    </style>
+
+</body>
+</html>

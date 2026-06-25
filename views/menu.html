@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Level Pedas - Menu Mie Jebew & Minuman</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #0f0c0c;
+            --card-dark: #1a1515;
+            --primary-red: #d32f2f;
+            --hot-orange: #ff5722;
+            --text-light: #f5f5f5;
+            --text-muted: #aaaaaa;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+        body { background-color: var(--bg-dark); color: var(--text-light); padding-bottom: 140px; }
+        
+        nav { display: flex; justify-content: space-between; align-items: center; padding: 20px 8%; background-color: rgba(26, 21, 21, 0.95); border-bottom: 2px solid var(--primary-red); position: sticky; top: 0; z-index: 1000; }
+        .logo { font-size: 24px; font-weight: 800; color: var(--text-light); text-transform: uppercase; }
+        .logo span { color: var(--primary-red); }
+        .nav-links { list-style: none; display: flex; gap: 25px; }
+        .nav-links a { color: var(--text-muted); text-decoration: none; font-weight: 600; }
+        .nav-links a.active { color: var(--hot-orange); }
+
+        .menu-container { padding: 40px 8%; text-align: center; }
+        .menu-container h2 { font-size: 36px; margin-bottom: 10px; text-transform: uppercase; }
+        .menu-container h2 span { color: var(--primary-red); }
+        .menu-subtitle { color: var(--text-muted); margin-bottom: 40px; }
+        
+        .menu-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
+        .menu-card { background-color: var(--card-dark); border-radius: 15px; overflow: hidden; border: 1px solid #2a2222; transition: 0.3s; display: flex; flex-direction: column; justify-content: space-between; }
+        .menu-card:hover { border-color: var(--hot-orange); box-shadow: 0 10px 20px rgba(211, 47, 47, 0.2); }
+        
+        .menu-img-container { position: relative; height: 160px; overflow: hidden; }
+        .menu-card img { width: 100%; height: 100%; object-fit: cover; }
+        
+        .menu-info { padding: 20px; text-align: left; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; }
+        .menu-info h3 { font-size: 20px; margin-bottom: 5px; color: white; }
+        .menu-desc { font-size: 13px; color: var(--text-muted); margin-bottom: 15px; display: block; height: 38px; overflow: hidden; text-overflow: ellipsis; }
+        
+        .menu-options { background-color: #221a1a; padding: 12px; border-radius: 8px; margin-bottom: 15px; font-size: 13px; }
+        .option-group { margin-bottom: 8px; display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+        .option-group:last-child { margin-bottom: 0; }
+        .option-group select { background-color: #0f0c0c; border: 1px solid #3a2e2e; color: white; padding: 6px 10px; border-radius: 4px; outline: none; font-size: 13px; max-width: 180px; flex-grow: 1; }
+        
+        .toping-list { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; margin-top: 5px; }
+        .toping-item { display: flex; align-items: center; gap: 5px; font-size: 12px; color: #ddd; cursor: pointer; }
+        .toping-item input { accent-color: var(--primary-red); }
+
+        .menu-footer { display: flex; justify-content: space-between; align-items: center; padding-top: 10px; border-top: 1px solid #2a2222; margin-top: auto; }
+        .price { font-size: 18px; font-weight: 700; color: var(--hot-orange); }
+        
+        .checkbox-container { position: relative; cursor: pointer; display: flex; align-items: center; justify-content: center; width: 35px; height: 35px; background-color: #241d1d; border: 2px solid var(--primary-red); border-radius: 8px; transition: 0.2s; }
+        .checkbox-container input { position: absolute; opacity: 0; cursor: pointer; }
+        .checkbox-container i { color: transparent; font-size: 16px; }
+        .checkbox-container input:checked ~ i { color: white; }
+        .checkbox-container:has(input:checked) { background-color: var(--primary-red); }
+        
+        /* PANEL CHECKOUT BAWAH */
+        .checkout-panel { position: fixed; bottom: -100%; left: 0; width: 100%; background-color: #161111; border-top: 3px solid var(--primary-red); padding: 20px 8%; box-shadow: 0 -10px 30px rgba(0,0,0,0.7); z-index: 2000; transition: bottom 0.4s ease; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 15px; }
+        .checkout-panel.active { bottom: 0; }
+        .checkout-info h4 { font-size: 18px; color: var(--text-light); }
+        .checkout-info p { font-size: 24px; font-weight: 800; color: var(--hot-orange); }
+        .checkout-form { display: flex; gap: 10px; flex-wrap: wrap; }
+        .checkout-form input, .checkout-form select { background-color: #241d1d; border: 1px solid #3a2e2e; color: white; padding: 10px 15px; border-radius: 8px; outline: none; }
+        .checkout-form input:focus { border-color: var(--hot-orange); }
+        .btn-pay { background: linear-gradient(45deg, var(--primary-red), var(--hot-orange)); color: white; border: none; padding: 12px 25px; border-radius: 8px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 8px; }
+        .btn-pay:hover { opacity: 0.9; }
+
+        /* MODAL POP-UP QRIS */
+        .modal-qris { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.85); display: flex; justify-content: center; align-items: center; z-index: 3000; opacity: 0; pointer-events: none; transition: 0.3s ease; }
+        .modal-qris.show { opacity: 1; pointer-events: auto; }
+        .modal-content { background-color: #1a1515; border: 2px solid var(--primary-red); padding: 30px; border-radius: 15px; text-align: center; width: 340px; box-shadow: 0 0 25px rgba(211, 47, 47, 0.4); }
+        .modal-content h3 { color: white; margin-bottom: 5px; font-size: 20px; }
+        .modal-content p { color: var(--text-muted); font-size: 13px; margin-bottom: 15px; }
+        .qris-img-box { background-color: white; padding: 10px; border-radius: 10px; margin-bottom: 15px; display: inline-block; width: 220px; height: 220px; }
+        .qris-img-box img { width: 100%; height: 100%; object-fit: contain; }
+        .total-tagihan-qris { font-size: 22px; font-weight: 800; color: #ff5722; margin-bottom: 20px; }
+        .btn-done { background-color: #4caf50; color: white; border: none; width: 100%; padding: 12px; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 14px; }
+        .btn-done:hover { background-color: #45a049; }
+
+        .warning-text { color: #ff5722; font-size: 12px; margin: 15px 0; font-weight: 600; text-align: center; }
+        footer { background-color: #080606; text-align: center; padding: 20px; color: var(--text-muted); border-top: 1px solid #221a1a; }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="logo">LEVEL<span>PEDAS</span></div>
+        <ul class="nav-links">
+            <li><a href="/">Beranda</a></li>
+            <li><a href="/menu" class="active">Menu</a></li>
+        </ul>
+    </nav>
+
+    <div class="menu-container">
+        <h2>Menu <span>Mie Jebew & Cemilan</span></h2>
+        <p class="menu-subtitle">Kustomisasi sesukamu, centang kotak menu, lalu kirim pesanan ke penjual!</p>
+        
+        <div class="menu-grid">
+            <!-- 1. MIE JEBEW -->
+            <div class="menu-card" id="card-jebew">
+                <div class="menu-img-container"><img src="/images/jebew.jpg" alt="Mie Jebew"></div>
+                <div class="menu-info">
+                    <div>
+                        <h3>Mie Jebew Gila</h3>
+                        <p class="menu-desc">Mie khas pedas manis basah dengan minyak cabai melimpah.</p>
+                        <div class="menu-options">
+                            <div class="option-group">
+                                <label>Level Pedas:</label>
+                                <select class="menu-level" onchange="hitungTotal()">
+                                    <option value="Lvl 0">Level 0 (Original)</option>
+                                    <option value="Lvl 1">Level 1</option>
+                                    <option value="Lvl 2">Level 2</option>
+                                    <option value="Lvl 3">Level 3</option>
+                                    <option value="Lvl 4">Level 4</option>
+                                    <option value="Lvl 5">Level 5 (Membara)</option>
+                                </select>
+                            </div>
+                            <div style="font-weight: 600; margin: 8px 0 5px 0; color: #ff5722;">Tambah Toping:</div>
+                            <div class="toping-list">
+                                <label class="toping-item"><input type="checkbox" class="menu-toping" value="Telur" data-harga="3000" onchange="hitungTotal()"> Telur (+3rb)</label>
+                                <label class="toping-item"><input type="checkbox" class="menu-toping" value="Sosis Besar" data-harga="3000" onchange="hitungTotal()"> Sosis Bsr (+3rb)</label>
+                                <label class="toping-item"><input type="checkbox" class="menu-toping" value="Sosis Kecil" data-harga="1500" onchange="hitungTotal()"> Sosis Kcl (+1.5rb)</label>
+                                <label class="toping-item"><input type="checkbox" class="menu-toping" value="Pentol Besar" data-harga="3000" onchange="hitungTotal()"> Pentol Bsr (+3rb)</label>
+                                <label class="toping-item"><input type="checkbox" class="menu-toping" value="Pentol Kecil" data-harga="1500" onchange="hitungTotal()"> Pentol Kcl (+1.5rb)</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="menu-footer">
+                        <span class="price" data-harga-dasar="10000">Rp 10.000</span>
+                        <label class="checkbox-container"><input type="checkbox" class="menu-item" data-id="jebew" data-nama="Mie Jebew" onchange="hitungTotal()"><i class="fas fa-check"></i></label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. BASO ACI -->
+            <div class="menu-card" id="card-baci">
+                <div class="menu-img-container"><img src="/images/baso aci.jpg" alt="Baso Aci"></div>
+                <div class="menu-info">
+                    <div>
+                        <h3>Baso Aci Kuah Pedas</h3>
+                        <p class="menu-desc">Baso aci kenyal lengkap dengan cuanki, pilus cikur, dan jeruk limau.</p>
+                        <div class="menu-options">
+                            <div class="option-group">
+                                <label>Level Pedas:</label>
+                                <select class="menu-level" onchange="hitungTotal()">
+                                    <option value="Lvl 0">Level 0</option><option value="Lvl 1">Level 1</option><option value="Lvl 2">Level 2</option><option value="Lvl 3">Level 3</option><option value="Lvl 4">Level 4</option><option value="Lvl 5">Level 5</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="menu-footer">
+                        <span class="price" data-harga-dasar="12000">Rp 12.000</span>
+                        <label class="checkbox-container"><input type="checkbox" class="menu-item" data-id="baci" data-nama="Baso Aci" onchange="hitungTotal()"><i class="fas fa-check"></i></label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. CIRENG  -->
+            <div class="menu-card" id="card-cireng">
+                <div class="menu-img-container"><img src="/images/keju.jpg" alt="Cireng"></div>
+                <div class="menu-info">
+                    <div>
+                        <h3>Cireng Special</h3>
+                        <p class="menu-desc">Cireng gurih renyah.</p>
+                        <div class="menu-options">
+                            <div class="option-group">
+                                <label>Pilihan Rasa :</label>
+                                <select class="menu-varian" onchange="hitungTotal()">
+                                    <option value="Chili Oil">Chili Oil (Pedas Nampol)</option>
+                                    <option value="Keju Creamy">Keju Kuah Creamy (Gurih Lembut)</option>
+                                </select>
+                            </div>
+                            <div class="option-group">
+                                <label>Level Pedas:</label>
+                                <select class="menu-level" onchange="hitungTotal()">
+                                    <option value="Lvl 0">Level 0</option><option value="Lvl 1">Level 1</option><option value="Lvl 2">Level 2</option><option value="Lvl 3">Level 3</option><option value="Lvl 4">Level 4</option><option value="Lvl 5">Level 5</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="menu-footer">
+                        <span class="price" data-harga-dasar="10000">Rp 10.000</span>
+                        <label class="checkbox-container"><input type="checkbox" class="menu-item" data-id="cireng" data-nama="Cireng Kuah" onchange="hitungTotal()"><i class="fas fa-check"></i></label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4. TAHU KOCEK -->
+            <div class="menu-card" id="card-tahu">
+                <div class="menu-img-container"><img src="/images/kocek.jpg" alt="Tahu Kocek"></div>
+                <div class="menu-info">
+                    <div>
+                        <h3>Tahu Kocek</h3>
+                        <p class="menu-desc">Tahu goreng kriuk dipotong kecil dan dikocek bersama ulekan cabai.</p>
+                        <div class="menu-options">
+                            <div class="option-group">
+                                <label>Level Pedas:</label>
+                                <select class="menu-level" onchange="hitungTotal()">
+                                    <option value="Lvl 0">Level 0</option><option value="Lvl 1">Level 1</option><option value="Lvl 2">Level 2</option><option value="Lvl 3">Level 3</option><option value="Lvl 4">Level 4</option><option value="Lvl 5">Level 5</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="menu-footer">
+                        <span class="price" data-harga-dasar="8000">Rp 8.000</span>
+                        <label class="checkbox-container"><input type="checkbox" class="menu-item" data-id="tahu" data-nama="Tahu Kocek" onchange="hitungTotal()"><i class="fas fa-check"></i></label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 5. TEMPURA KOCEK -->
+            <div class="menu-card" id="card-tempura">
+                <div class="menu-img-container"><img src="/images/tempura.jpg" alt="Tempura"></div>
+                <div class="menu-info">
+                    <div>
+                        <h3>Tempura Kocek</h3>
+                        <p class="menu-desc">Aneka jajanan pasar goreng dengan bumbu ulek kocek pedas manis.</p>
+                        <div class="menu-options">
+                            <div class="option-group">
+                                <label>Level Pedas:</label>
+                                <select class="menu-level" onchange="hitungTotal()">
+                                    <option value="Lvl 0">Level 0</option><option value="Lvl 1">Level 1</option><option value="Lvl 2">Level 2</option><option value="Lvl 3">Level 3</option><option value="Lvl 4">Level 4</option><option value="Lvl 5">Level 5</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="menu-footer">
+                        <span class="price" data-harga-dasar="8000">Rp 8.000</span>
+                        <label class="checkbox-container"><input type="checkbox" class="menu-item" data-id="tempura" data-nama="Tempura Kocek" onchange="hitungTotal()"><i class="fas fa-check"></i></label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 6. PAKET HEMAT -->
+            <div class="menu-card" id="card-paket">
+                <div class="menu-img-container"><img src="/images/pakethemat.png" alt="Paket Hemat"></div>
+                <div class="menu-info">
+                    <div>
+                        <h3>Paket Hemat Super</h3>
+                        <p class="menu-desc">Kombinasi makanan + es minuman dingin, kenyang ramah kantong!</p>
+                        <div class="menu-options">
+                            <div class="option-group">
+                                <label>Pilih Jenis Paket:</label>
+                                <select class="menu-varian" id="pilihanPaket" onchange="hitungTotal()">
+                                    <option value="Paket 7rb" data-harga-paket="7000">Paket 7.000 (Mie Jebew Biasa + es teh)</option>
+                                    <option value="Paket 10rb" data-harga-paket="10000">Paket 10.000 (Mie Jebew Toping + es teh)</option>
+                                </select>
+                            </div>
+                            <div class="option-group">
+                                <label>Level Pedas:</label>
+                                <select class="menu-level" onchange="hitungTotal()">
+                                    <option value="Lvl 0">Level 0</option><option value="Lvl 1">Level 1</option><option value="Lvl 2">Level 2</option><option value="Lvl 3">Level 3</option><option value="Lvl 4">Level 4</option><option value="Lvl 5">Level 5</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="menu-footer">
+                        <span class="price" id="hargaPaketTeks" data-harga-dasar="7000">Rp 7.000</span>
+                        <label class="checkbox-container"><input type="checkbox" class="menu-item" data-id="paket" data-nama="Paket Hemat" onchange="hitungTotal()"><i class="fas fa-check"></i></label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 7. MENU MINUMAN SEGAR -->
+            <div class="menu-card" id="card-minuman">
+                <div class="menu-img-container"><img src="/images/MINUMAN.png" alt="Minuman"></div>
+                <div class="menu-info">
+                    <div>
+                        <h3>Minuman Segar Penawar Pedas</h3>
+                        <p class="menu-desc">Pilih es minuman manis favoritmu untuk meredakan sengatan pedas!</p>
+                        <div class="menu-options">
+                            <div class="option-group">
+                                <label>Jenis Minuman:</label>
+                                <select id="jenisMinuman" onchange="updateVarianMinuman(); hitungTotal();">
+                                    <option value="Sweet Tea" data-harga-minum="3000">Sweet Tea (Rp 3.000)</option>
+                                    <option value="Lemon Tea" data-harga-minum="4000">Lemon Tea (Rp 4.000)</option>
+                                    <option value="Good Day Freeze" data-harga-minum="5000">Es Good Day Freeze (Rp 5.000)</option>
+                                    <option value="Chocolatos Coklat" data-harga-minum="5000">Chocolatos Coklat (Rp 5.000)</option>
+                                    <option value="Chocolatos Matcha" data-harga-minum="5000">Chocolatos Matcha (Rp 5.000)</option>
+                                    <option value="Pop Ice" data-harga-minum="5000">Pop Ice All Varian (Rp 5.000)</option>
+                                    <option value="Nutrisari" data-harga-minum="4000">Nutrisari All Varian (Rp 4.000)</option>
+                                </select>
+                            </div>
+                            <div class="option-group" id="groupRasaMinuman" style="display: none;">
+                                <label>Pilihan Rasa:</label>
+                                <select id="rasaMinuman" onchange="hitungTotal()">
+                                    <!-- Diisi otomatis via javascript -->
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="menu-footer">
+                        <span class="price" id="hargaMinumanTeks" data-harga-dasar="3000">Rp 3.000</span>
+                        <label class="checkbox-container"><input type="checkbox" class="menu-item" data-id="minuman" data-nama="Minuman" onchange="hitungTotal()"><i class="fas fa-check"></i></label>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- PANEL CHECKOUT BAWAH -->
+    <div class="checkout-panel" id="panelCheckout">
+        <div class="checkout-info">
+            <h4 id="jumlahPilihan">0 Item Terpilih</h4>
+            <p id="totalHarga">Rp 0</p>
+        </div>
+        <div class="checkout-form">
+            <input type="text" id="namaCust" placeholder="Nama Kamu" required>
+            <input type="tel" id="hpCust" placeholder="No WhatsApp (Aktif)" required>
+            <select id="metodeBayar">
+                <option value="Cash">Cash (Bayar di Toko)</option>
+                <option value="QRIS">QRIS / E-Wallet</option>
+            </select>
+            <button class="btn-pay" onclick="prosesBayar()"><i class="fas fa-fire"></i> Kirim Pesanan</button>
+        </div>
+    </div>
+
+    <!-- MODAL POP-UP KODE QRIS -->
+    <div class="modal-qris" id="modalQrisOverlay">
+        <div class="modal-content">
+            <h3>Scan QRIS Toko</h3>
+            <p>Silakan scan dan lakukan pembayaran tepat waktu sesuai nominal berikut:</p>
+            <div class="total-tagihan-qris" id="tagihanQrisTeks">Rp 0</div>
+            
+            <div class="qris-img-box">
+                <img src="/qris.png" onerror="this.src='https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=LevelPedasMieJebew'" alt="QRIS Toko">
+            </div>
+            
+            <p style="color: #ff9800; font-size: 11px; margin-bottom: 15px;"><i class="fas fa-info-circle"></i> Setelah berhasil bayar, klik tombol di bawah untuk menyelesaikan pesanan.</p>
+            <button class="btn-done" onclick="selesaikanOrderQRIS()">Saya Sudah Bayar</button>
+        </div>
+    </div>
+
+    <p class="warning-text">
+        *Wajib tunjukkan bukti transfer sukses ke penjual saat mengambil makanan!
+    </p>
+
+    <footer><p>&copy; 2026 Level Pedas Group - Spesialis Mie Jebew.</p></footer>
+
+    <script>
+        let totalBelanja = 0;
+        let ringkasanPesanan = [];
+
+        function updateVarianMinuman() {
+            const jenis = document.getElementById('jenisMinuman').value;
+            const groupRasa = document.getElementById('groupRasaMinuman');
+            const rasaSelect = document.getElementById('rasaMinuman');
+            
+            rasaSelect.innerHTML = "";
+
+            if (jenis === "Pop Ice") {
+                groupRasa.style.display = "flex";
+                const rasaPopIce = ["Coklat", "Mangga", "Strobery", "Permen Karet", "Vanila Blue", "Durian", "Leci", "Melon", "Taro"];
+                rasaPopIce.forEach(r => {
+                    rasaSelect.innerHTML += `<option value="${r}">${r}</option>`;
+                });
+            } else if (jenis === "Nutrisari") {
+                groupRasa.style.display = "flex";
+                const rasaNutrisari = ["Jeruk", "Jeruk Nipis", "Strobery", "Cincau"];
+                rasaNutrisari.forEach(r => {
+                    rasaSelect.innerHTML += `<option value="${r}">${r}</option>`;
+                });
+            } else {
+                groupRasa.style.display = "none";
+            }
+        }
+
+        function hitungTotal() {
+            const checkboxes = document.querySelectorAll('.menu-item:checked');
+            totalBelanja = 0;
+            ringkasanPesanan = [];
+
+            const opsiPaket = document.getElementById('pilihanPaket');
+            if(opsiPaket) {
+                const hargaPaketAktif = parseInt(opsiPaket.options[opsiPaket.selectedIndex].getAttribute('data-harga-paket'));
+                document.getElementById('hargaPaketTeks').setAttribute('data-harga-dasar', hargaPaketAktif);
+                document.getElementById('hargaPaketTeks').innerText = `Rp ${hargaPaketAktif.toLocaleString('id-ID')}`;
+            }
+
+            const opsiMinum = document.getElementById('jenisMinuman');
+            if(opsiMinum) {
+                const hargaMinumAktif = parseInt(opsiMinum.options[opsiMinum.selectedIndex].getAttribute('data-harga-minum'));
+                document.getElementById('hargaMinumanTeks').setAttribute('data-harga-dasar', hargaMinumAktif);
+                document.getElementById('hargaMinumanTeks').innerText = `Rp ${hargaMinumAktif.toLocaleString('id-ID')}`;
+            }
+
+            checkboxes.forEach(cb => {
+                const card = cb.closest('.menu-card');
+                const namaUtama = cb.getAttribute('data-nama');
+                
+                const hargaDasarElement = card.querySelector('.price');
+                let hargaItem = parseInt(hargaDasarElement.getAttribute('data-harga-dasar'));
+                
+                const level = card.querySelector('.menu-level') ? card.querySelector('.menu-level').value : '';
+                let varian = card.querySelector('.menu-varian') ? `(${card.querySelector('.menu-varian').value})` : '';
+                
+                if (cb.getAttribute('data-id') === 'minuman') {
+                    const jenis = document.getElementById('jenisMinuman').value;
+                    const rasa = document.getElementById('rasaMinuman').value;
+                    varian = rasa ? `(${jenis} rasa ${rasa})` : `(${jenis})`;
+                }
+
+                let listTopingTerpilih = [];
+                const topings = card.querySelectorAll('.menu-toping:checked');
+                topings.forEach(t => {
+                    hargaItem += parseInt(t.getAttribute('data-harga'));
+                    listTopingTerpilih.push(t.value);
+                });
+
+                totalBelanja += hargaItem;
+
+                let detailTeks = `${namaUtama} ${varian} ${level ? '['+level+']' : ''}`;
+                if(listTopingTerpilih.length > 0) {
+                    detailTeks += ` + Toping: ${listTopingTerpilih.join(', ')}`;
+                }
+                ringkasanPesanan.push(detailTeks.trim());
+            });
+
+            document.getElementById('jumlahPilihan').innerText = `${checkboxes.length} Item Terpilih`;
+            document.getElementById('totalHarga').innerText = `Rp ${totalBelanja.toLocaleString('id-ID')}`;
+            
+            if (checkboxes.length > 0) {
+                document.getElementById('panelCheckout').classList.add('active');
+            } else {
+                document.getElementById('panelCheckout').classList.remove('active');
+            }
+        }
+
+        function prosesBayar() {
+            const nama = document.getElementById('namaCust').value.trim();
+            const hp = document.getElementById('hpCust').value.trim();
+            const metode = document.getElementById('metodeBayar').value;
+            if (!nama || !hp) { alert('Tolong isi nama dan nomor HP kamu dulu ya!'); return; }
+
+            if (metode === "QRIS") {
+                // Tampilkan Modal QRIS terlebih dahulu ke user sebelum benar-benar diproses ke server
+                document.getElementById('tagihanQrisTeks').innerText = `Rp ${totalBelanja.toLocaleString('id-ID')}`;
+                document.getElementById('modalQrisOverlay').classList.add('show');
+            } else {
+                // Jika Cash langsung kirim data ke server
+                kirimDataKeServer();
+            }
+        }
+
+        function selesaikanOrderQRIS() {
+            document.getElementById('modalQrisOverlay').classList.remove('show');
+            kirimDataKeServer();
+        }
+
+        function kirimDataKeServer() {
+            const nama = document.getElementById('namaCust').value.trim();
+            const hp = document.getElementById('hpCust').value.trim();
+            const metode = document.getElementById('metodeBayar').value;
+
+            fetch('/api/pesanan', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    nama: nama,
+                    no_hp: hp,
+                    total: totalBelanja,
+                    metode: metode,
+                    alamat: 'Makan Di Tempat',
+                    detail_menu: ringkasanPesanan.join(' | ')
+                })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if(metode === "QRIS") {
+                    alert('Pesanan berhasil dikirim! Silakan langsung menuju meja kasir untuk tunjukkan bukti bayar QRIS. 🔥');
+                } else {
+                    alert('Pesanan berhasil dikirim! Pembayaran Cash dilakukan saat makanan datang atau di kasir. 🔥');
+                }
+                location.reload(); 
+            })
+            .catch(err => {
+                console.error(err);
+                alert('Gagal mengirim pesanan ke server.');
+            });
+        }
+    </script>
+</body>
+</html>
